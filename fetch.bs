@@ -303,8 +303,11 @@ specialized multimap. An ordered list of key-value pairs with potentially duplic
 <a>byte-case-insensitive</a> match for <var>name</var>.
 
 <p>A <a for=/>header list</a> has an associated
-<dfn for="header list" id=concept-header-list-allow-privilaged-headers>allow privilaged headers flag
-</dfn>. Unless stated otherwise it is unset.
+<dfn export for="header list" id=concept-header-list-allow-privileged-headers>allow privileged
+headers flag</dfn>. Unless stated otherwise it is unset.
+
+<p class="note no-backref">This should be set by APIs that want to send one of the <a>privileged
+request-headers</a>. This flag is unset if the request is modified by the developer.
 
 <p>To <dfn export for="header list" id=concept-header-list-append>append</dfn> a
 <a for=header>name</a>/<a for=header>value</a> (<var>name</var>/<var>value</var>) pair to a
@@ -448,6 +451,16 @@ failure.
 
 <p>A <dfn export>CORS non-wildcard request-header name</dfn> is a <a>byte-case-insensitive</a> match
 for `<code>Authorization</code>`.
+
+<p>A <dfn export>privileged request-header</dfn> is a <a>header</a> whose <a for=header>name</a> is
+a <a>byte-case-insensitive</a> match for one of
+
+<ul class=brief>
+ <li>`<code>Range</code>`
+</ul>
+
+<p class="note no-backref">These are headers that may be set carefully by APIs, but it would be
+dangerous to allow developers to set this header themselves.
 
 <p>A <dfn export>CORS-safelisted response-header name</dfn>, given a
 <a for=response>CORS-exposed header-name list</a> <var>list</var>, is a <a>header</a>
@@ -4241,6 +4254,17 @@ objects.</span>
  "<code>request</code>" and <var>name</var> is a <a>forbidden header name</a>,
  return.
 
+ <li><p>Otherwise, if <a for=Headers>guard</a> is "<code>request-no-cors</code>" and
+ <var>name</var>/<var>value</var> is not a <a>CORS-safelisted request-header</a>, then:
+
+  <ol>
+   <li><p>If <var>headers</var>'s <a for=Headers>header list</a>'s <a for="header list">allow
+   privileged headers flag</a> is unset, return.
+
+   <li><p>If <var>name</var>/<var>value</var> is not a <a>privileged request-header</a>, return.
+  </ol>
+ </li>
+
  <li><p>Otherwise, if <a for=Headers>guard</a> is
  "<code>request-no-cors</code>" and <var>name</var>/<var>value</var> is not a
  <a>CORS-safelisted request-header</a>, return.
@@ -4292,8 +4316,15 @@ constructor, when invoked, must run these steps:
 </ol>
 
 <p>The <dfn export for=Headers method><code>append(<var>name</var>, <var>value</var>)</code></dfn>
-method, when invoked, must <a for=Headers>append</a> <var>name</var>/<var>value</var> to
-<a>context object</a> and rethrow any exception.
+method, when invoked, must run these steps:
+
+<ol>
+ <li><p><a for=Headers>append</a> <var>name</var>/<var>value</var> to <a>context object</a> and
+ rethrow any exception.
+
+ <li><p>Unset <a>context object</a>'s <a for=Headers>header list</a>'s
+ <a for="header list">allow privileged headers flag</a>
+</ol>
 
 <p>The <dfn export for=Headers method><code>delete(<var>name</var>)</code></dfn>
 method, when invoked, must run these steps:
@@ -4322,6 +4353,9 @@ method, when invoked, must run these steps:
 
  <li><p><a for="header list">Delete</a> <var>name</var> from
  <a for=Headers>header list</a>.
+
+ <li><p>Unset <a>context object</a>'s <a for=Headers>header list</a>'s
+ <a for="header list">allow privileged headers flag</a>
 </ol>
 
 <p>The <dfn export for=Headers method><code>get(<var>name</var>)</code></dfn> method, when
@@ -4377,6 +4411,9 @@ method, when invoked, must run these steps:
  <li><p><a for="header list">Set</a>
  <var>name</var>/<var>value</var> in
  <a for=Headers>header list</a>.
+
+ <li><p>Unset <a>context object</a>'s <a for=Headers>header list</a>'s
+ <a for="header list">allow privileged headers flag</a>
 </ol>
 
 <p>The <a>value pairs to iterate over</a> are the return value of running
@@ -4840,14 +4877,17 @@ constructor must run these steps:
 
    <li><p>Set <var>request</var>'s
    <a for=request>referrer policy</a> to the empty string.
+   <p class=note>This is done to ensure that when a service worker "redirects" a request, .e.g.,
+   from an image in a cross-origin stylesheet, and makes modifications, it no longer appears to come
+   from the original source (i.e., the cross-origin stylesheet), but instead from the service worker
+   that "redirected" the request. This is important as the original source might not even be able to
+   generate the same kind of requests as the service worker. Services that trust the original source
+   could therefore be exploited were this not done, although that is somewhat farfetched.
+
+   <li><p>Unset <var>request</var>'s <a for=request>header list</a>'s
+   <a for="header list">allow privileged headers flag</a>.
   </ol>
 
-  <p class=note>This is done to ensure that when a service worker "redirects" a request, .e.g.,
-  from an image in a cross-origin stylesheet, and makes modifications, it no longer appears to come
-  from the original source (i.e., the cross-origin stylesheet), but instead from the service worker
-  that "redirected" the request. This is important as the original source might not even be able to
-  generate the same kind of requests as the service worker. Services that trust the original source
-  could therefore be exploited were this not done, although that is somewhat farfetched.
 
  <li>
   <p>If <var>init</var>'s <code>referrer</code> member is present, run these
