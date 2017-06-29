@@ -4219,9 +4219,6 @@ objects.</span>
 "<code>response</code>" or
 "<code>none</code>".
 
-<p class="note no-backref">"<code>immutable</code>" exists for service workers.
-[[!SW]]
-
 <p>To <dfn export for=Headers id=concept-headers-append>append</dfn> a
 <a for=header>name</a>/<a for=header>value</a>
 (<var>name</var>/<var>value</var>) pair to a
