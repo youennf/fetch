@@ -302,6 +302,10 @@ specialized multimap. An ordered list of key-value pairs with potentially duplic
 (<var>name</var>) if <var>list</var> contains a <a>header</a> whose <a for=header>name</a> is a
 <a>byte-case-insensitive</a> match for <var>name</var>.
 
+<p>A <a for=/>header list</a> has an associated
+<dfn for="header list" id=concept-header-list-allow-privilaged-headers>allow privilaged headers flag
+</dfn>. Unless stated otherwise it is unset.
+
 <p>To <dfn export for="header list" id=concept-header-list-append>append</dfn> a
 <a for=header>name</a>/<a for=header>value</a> (<var>name</var>/<var>value</var>) pair to a
 <a for=/>header list</a> (<var>list</var>), run these steps:
