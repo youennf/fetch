@@ -1234,6 +1234,29 @@ or "<code>worker</code>".
   </ol>
 </ol>
 
+<hr>
+
+<p>To <dfn export for=request id=concept-request-add-range-header>add a range header</dfn> for a <a
+for=/>request</a> <var>request</var>, an integer <var>start</var>, and an optional integer
+<var>end</var>, run these steps:
+
+<ol>
+ <li><p>Set <var>request</var>'s <a for=request>header list</a>'s <a for="header list">allow
+ privileged headers flag</a>.
+
+ <li><p>Let <var>rangeValue</var> be `<code>bytes </code>`.
+
+ <li><p><a>Encode</a> <var>start</var> and append the result to <var>rangeValue</var>.
+
+ <li><p>Append `<code>-</code>` to <var>rangeValue</var>.
+
+ <li><p>If <var>end</var> is provided, <a>encode</a> it and append the result to
+ <var>rangeValue</var>.
+
+ <li><p><a for="header list">Append</a> `<code>Range</code>`/<var>rangeValue</var> to
+ <var>request</var>'s <a for=request>header list</a>.
+</ol>
+
 
 <h4 id=responses>Responses</h4>
 
