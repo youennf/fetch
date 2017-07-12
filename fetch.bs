@@ -3544,20 +3544,9 @@ Range Requests</cite>. [[HTTP-RANGE]] However, this is not widely supported by b
     </ol>
   </ol>
 
- <li>
-  <p>If <var>response</var>'s <a for=response>status</a> is <code>206</code>, then run these
-  substeps:
-
-  <ol>
-   <li><p>If <var>httpRequest</var>'s <a for=request>header list</a> does not
-   <a for="header list">contain</a> "<code>`Range`</code>", return a <a>network error</a>.
-
-   <li><p>If <var>response</var>'s <a for=response>type</a> is "<code>opaque</code>", or
-   "<code>opaqueredirect</code>", and <var>httpRequest</var>'s <a for=request>url</a> does not
-   <a for=url>equal</a> the first item in <var>response</var>'s <a for=response>url list</a>, return
-   a <a>network error</a>.
-  </ol>
- </li>
+ <li><p>If <var>response</var>'s <a for=response>status</a> is <code>206</code>, and
+ <var>httpRequest</var>'s <a for=request>header list</a> does not <a for="header list">contain</a>
+ "<code>`Range`</code>", return a <a>network error</a>.
 
  <li>
   <p>If <var>response</var>'s <a for=response>status</a> is <code>401</code>, <i>CORS flag</i>
