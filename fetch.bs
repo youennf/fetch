@@ -3007,6 +3007,9 @@ optional <i>CORS flag</i> and <i>CORS-preflight flag</i>, run these steps:
 
      <li><p>Execute <a href=https://w3c.github.io/webappsec-csp/#set-response-csp-list>set <var>response</var>'s CSP list</a>
      on <var>actualResponse</var>. [[!CSP]]
+
+     <li><p>If <var>response</var>'s <a for=response>type</a> is "<code>opaqueredirect</code>", then
+     return <var>response</var>.
     </ol>
   </ol>
 
@@ -3091,10 +3094,9 @@ optional <i>CORS flag</i> and <i>CORS-preflight flag</i>, run these steps:
    <li><p>Let <var>location</var> be the result of <a>extracting header list values</a> given
    `<code>Location</code>` and <var>actualResponse</var>'s <a for=response>header list</a>.
 
-   <li><p>If <var>location</var> is a <a for=header>value</a>, then set
-   <var>location</var> to the result of
-   <a lt="url parser">parsing</a> <var>location</var> with
-   <var>actualResponse</var>'s <a for=response>url</a>.
+   <li><p>If <var>location</var> is a <a for=header>value</a>, then set <var>location</var> to the
+   result of <a lt="url parser">parsing</a> <var>location</var> with <var>request</var>'s
+   <a for=request>current url</a>.
 
    <li><p>Set <var>actualResponse</var>'s
    <a for=response>location URL</a> to <var>location</var>.
@@ -6077,6 +6079,7 @@ Glenn Maynard,
 Graham Klyne,
 Hal Lockhart,
 Hallvord R. M. Steen,
+Harris Hancock,
 Henri Sivonen,
 Henry Story,
 Hiroshige Hayashizaki,
